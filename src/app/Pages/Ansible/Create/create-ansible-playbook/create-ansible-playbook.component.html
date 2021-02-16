@@ -56,7 +56,7 @@
               <td class="text-center">{{play.id}}</td>
               <td class="text-center">{{play.name}}</td>
               <td class="text-center">{{play.gather_facts}}</td>
-              <td class="text-center">{{play.hosts.length}}</td>
+              <td class="text-center">{{play.hosts.split(',').length}}</td>
               <td class="text-center">{{get_object_keys_count(play.vars)}}</td>
               <td class="text-center">{{play.commands_list.length}}</td>
             </tr>
@@ -118,7 +118,7 @@
                 </div>
               </td>
               <td class="text-center">
-                <textarea type="text" class="container-fluid" placeholder="Comma seperated hosts list" [(ngModel)]="current_play_hosts"></textarea>
+                <textarea type="text" class="container-fluid" placeholder="Comma seperated hosts list" [(ngModel)]="current_play_hosts.split(',').length"></textarea>
               </td>
             </tbody>
           </table>
@@ -630,7 +630,7 @@
                   </thead>
                   <tbody class="tbody">
                     <td class="text-center">{{play.gather_facts}}</td>
-                    <td class="text-center">{{play.hosts.length}}</td>
+                    <td class="text-center">{{play.hosts.split(',').length}}</td>
                     <td class="text-center">{{get_object_keys_count(play.vars)}}</td>
                     <td class="text-center">{{play.commands_list.length}}</td>
                   </tbody>
