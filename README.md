@@ -30,8 +30,8 @@ To avoid the pain points of
 
 ## Dependencies
 
-    1) [Ansible Docs Boot](https://github.com/maheshyaddanapudi/ansible-docs-boot) 
-    2) [Ansible Playbook JSON 2 YAML](https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml) 
+1) [Ansible Docs Boot](https://github.com/maheshyaddanapudi/ansible-docs-boot) 
+2) [Ansible Playbook JSON 2 YAML](https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml) 
 
 ## Containerization CI (Continuous Integration)
 
@@ -92,6 +92,7 @@ Access the UI --> http://localhost
 
 ### Video Sample
 
-<iframe src="https://drive.google.com/file/d/1Ulv6SXwIOA0o6V6GP-AjSl_1Q7-zveq3/preview" width="640" height="480"></iframe>
+[![Watch the video](https://img.youtube.com/vi/yR0x0XGLcFo/maxresdefault.jpg)](https://youtu.be/yR0x0XGLcFo)
+
 
     
