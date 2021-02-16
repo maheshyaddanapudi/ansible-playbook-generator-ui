@@ -67,7 +67,7 @@ If not, use the below command to link and checkout
     git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-docs-boot
     git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml
 
-To run the docker-compose : For ansible-docs-boot and ansible-playbook-json2yaml into different containters, using their corresponding official dockerhub images.
+To run the docker-compose : For ansible-docs-boot and ansible-playbook-json2yaml into different containters, using their corresponding docker images.
 
     docker-compose build
     docker-compose up or docker-compose up -d (For deamonizing the processes)
