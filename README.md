@@ -14,6 +14,12 @@ The idea is to build a single production grade Angular UI with the following
 
       • Ability to generate Ansible Playbook instead of coding the YAML
 
+## Web App 
+
+### Video Sample
+
+[![Watch the video](https://img.youtube.com/vi/yR0x0XGLcFo/maxresdefault.jpg)](https://youtu.be/yR0x0XGLcFo)
+
 ## Motivation
 
 To avoid the pain points of
@@ -42,11 +48,38 @@ To avoid the pain points of
 
 Docker Image published to <a href="https://hub.docker.com/repository/docker/zzzmahesh/ansible-playbook-generator-ui" target="_blank">DockerHub here</a>
 
-Image is equipped with production ready Nginx & UWSGI 
+Image is equipped with production ready Nginx
 
 To pull the image :
 
 	docker pull zzzmahesh/ansible-playbook-generator-ui
+
+## Run Conductor Boot : Docker Compose
+
+Clone the repository to your local.
+
+    git clone https://github.com/maheshyaddanapudi/ansible-playbook-generator-ui.git
+
+Verify if tha git submodules ansible-docs-boot and ansible-playbook-json2yaml have corresponding Dockerfile inside the respective folders.
+
+If not, use the below command to link and checkout
+
+    git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-docs-boot
+    git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml
+
+To run the docker-compose : For ansible-docs-boot and ansible-playbook-json2yaml into different containters, using their corresponding official dockerhub images.
+
+    docker-compose build
+    docker-compose up or docker-compose up -d (For deamonizing the processes)
+
+Once all containers are started successfully, the "docker ps" output should look something similar to below.
+
+    CONTAINER ID   IMAGE                                  COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+    8898cad78b57   ansible-playbook-generator-ui:latest   "/docker-entrypoint.…"   13 minutes ago   Up 13 minutes   0.0.0.0:80->80/tcp                        ansible-playbook-generator-ui_ansible-playbook-generator-ui_1
+    6d11bf56c037   ansible-playbook-json2yaml             "/entrypoint.sh /sta…"   26 minutes ago   Up 13 minutes   80/tcp, 443/tcp, 0.0.0.0:5000->5000/tcp   ansible-playbook-generator-ui_ansible-playbook-json2yaml_1
+    1fdba166d095   ansible-docs-boot                      "/bin/bash /appln/sc…"   26 minutes ago   Up 13 minutes   0.0.0.0:8080->8080/tcp                    ansible-playbook-generator-ui_ansible-docs-boot_1
+
+Access the UI --> http://localhost
 
 ## Run : Angular
 
@@ -64,35 +97,4 @@ To pull the image :
 To run the container :
 
     docker run --name ansible-playbook-generator-ui -p 80:80 -d zzzmahesh/ansible-playbook-generator-ui:latest
-
-## Run Conductor Boot : Docker Compose
-
-Verify if tha git submodules ansible-docs-boot and ansible-playbook-json2yaml have corresponding Dockerfile inside the respective folders.
-
-If not, use the below command to link and checkout
-
-    git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-docs-boot
-    git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml
-
-To run the docker-compose : For ansible-docs-boot and ansible-playbook-json2yaml into different containters, using their corresponding official dockerhub images.
-
-    docker-compose build
-    docker-compose up or docker-compose -d (For deamonizing the processes)
-
-Once all containers are started successfully, the "docker ps" output should look something similar to below.
-
-    CONTAINER ID   IMAGE                                  COMMAND                  CREATED          STATUS          PORTS                                     NAMES
-    8898cad78b57   ansible-playbook-generator-ui:latest   "/docker-entrypoint.…"   13 minutes ago   Up 13 minutes   0.0.0.0:80->80/tcp                        ansible-playbook-generator-ui_ansible-playbook-generator-ui_1
-    6d11bf56c037   ansible-playbook-json2yaml             "/entrypoint.sh /sta…"   26 minutes ago   Up 13 minutes   80/tcp, 443/tcp, 0.0.0.0:5000->5000/tcp   ansible-playbook-generator-ui_ansible-playbook-json2yaml_1
-    1fdba166d095   ansible-docs-boot                      "/bin/bash /appln/sc…"   26 minutes ago   Up 13 minutes   0.0.0.0:8080->8080/tcp                    ansible-playbook-generator-ui_ansible-docs-boot_1
-
-Access the UI --> http://localhost
-
-## Web App 
-
-### Video Sample
-
-[![Watch the video](https://img.youtube.com/vi/yR0x0XGLcFo/maxresdefault.jpg)](https://youtu.be/yR0x0XGLcFo)
-
-
     
