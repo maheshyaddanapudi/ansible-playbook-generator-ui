@@ -729,4 +729,8 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       }
     })
   }
+
+  get_comma_delimited_length(object: string): number{
+    return object.split(',').length
+  }
 }
