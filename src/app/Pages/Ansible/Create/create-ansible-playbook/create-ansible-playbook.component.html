@@ -1,0 +1,884 @@
+<div class="container-fluid text-center">
+    <div class="card-header">
+      <h1><u><b><i>Compose New Ansible Playbook !!!</i></b></u></h1>
+    </div>
+
+    <div *ngIf="show_loading" class="loading-custom">Loading...</div>
+
+    <div *ngIf="error_message" class="alert alert-danger mt-2 text-center text-strong" role="alert">
+      <strong>{{error_message}}</strong>
+    </div>
+
+    <div class="card text-center">
+      <div class="card-header bg-dark text-white">
+        <h6>Control Panel</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <input type="checkbox" [checked]="hide_overall_summary" (click)="toggle_hide_overall_summary()"> Hide Overall Summary
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" [checked]="hide_plays_detailed_view" (click)="toggle_hide_plays_detailed_view()"> Hide Plays Detailed View
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" [checked]="should_validate_register_output_variable_name" (click)="toggle_should_validate_register_output_variable_name()"> Duplicate Output Variable Name Check
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!hide_overall_summary" class="card mt-2">
+      <div class="card-header bg-secondary">
+        <h4 class="text-white">Progress Overview</h4>
+      </div>
+      <div class="card-body bg-dark">
+        <table class="table table-secondary table-bordered text-center" style="border-color: black;">
+          <tbody class="tbody">
+            <th class="text-center">Total Plays</th>
+            <th class="text-center">{{intermediate_plays_list.length}}</th>
+          </tbody>
+        </table>
+        <h5 class="text-white"><u><b>Plays Summary</b></u></h5>
+        <table class="table table-bordered text-center" style="border-color: black;">
+          <thead class="thead">
+            <th class="text-center table-light">#</th>
+            <th class="text-center table-primary">Play ID</th>
+            <th class="text-center table-primary">Play Name</th>
+            <th class="text-center table-success">Gather Facts?</th>
+            <th class="text-center table-success">Hosts Count</th>
+            <th class="text-center table-success">Variables count</th>
+            <th class="text-center table-success">Tasks Count</th>
+          </thead>
+          <tbody class="tbody text-white">
+            <tr *ngFor="let play of intermediate_plays_list ; index as play_counter">
+              <td class="text-center">{{play_counter+1}}</td>
+              <td class="text-center">{{play.id}}</td>
+              <td class="text-center">{{play.name}}</td>
+              <td class="text-center">{{play.gather_facts}}</td>
+              <td class="text-center">{{play.hosts.length}}</td>
+              <td class="text-center">{{get_object_keys_count(play.vars)}}</td>
+              <td class="text-center">{{play.commands_list.length}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="intermediate_plays_list.length == 0" class="alert alert-warning mt-2 text-center text-strong" role="alert">
+          <strong>No Plays composed yet !!!</strong>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <button *ngIf="plays.length >0 ; else disable_reset_composition_button_template" class="btn btn-danger btn-block text-white" (click)="reset_composition()"><b>Reset Composition</b></button>
+            <ng-template #disable_reset_composition_button_template>
+              <button class="btn btn-light btn-block disabled" disabled><b>Reset Composition</b></button>
+            </ng-template>
+          </div>
+          <div class="col-md-6">
+            <button *ngIf="!show_add_play_form ; else disable_add_play_button_template" class="btn btn-info btn-block text-white" (click)="toggle_show_add_play_form(true)"><b>Add New Play</b></button>
+            <ng-template #disable_add_play_button_template>
+              <button class="btn btn-light btn-block disabled" disabled><b>Add New Play</b></button>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!error_message && show_add_play_form">
+      <div class="card my-2">
+        <div class="card-header bg-info">
+          <h5 class="text-white">Compose New Play</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="thead table-success">
+              <th class=text-center>Play ID</th>
+              <th class=text-center>Play Name</th>
+            </thead>
+            <tbody class="tbody">
+              <td class="text-center">Play_{{plays.length+1}}</td>
+              <td class="text-center">
+                <input type="text" autofocus [(ngModel)]="current_play_name">
+              </td>
+            </tbody>
+          </table>
+          <table class="table table-bordered table-striped">
+            <thead class="thead table-primary">
+              <th class=text-center>Gather Facts</th>
+              <th class=text-center>Hosts Count</th>
+            </thead>
+            <tbody class="tbody">
+              <td class="text-center">
+                <div class="dropdown">
+                  <button class="btn btn-info btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{current_play_gather_facts}}
+                  </button>
+                  <div class="dropdown-menu btn btn-block text-center bg-light" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" (click)="toggle_current_play_gather_facts(true)">true</a>
+                    <a class="dropdown-item" (click)="toggle_current_play_gather_facts(false)">false</a>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center">
+                <textarea type="text" class="container-fluid" placeholder="Comma seperated hosts list" [(ngModel)]="current_play_hosts"></textarea>
+              </td>
+            </tbody>
+          </table>
+          <div *ngIf="current_play_variable_name_validation_error" class="alert alert-warning my-2 text-center text-strong" role="alert">
+            <strong>{{current_play_variable_name_validation_error}}</strong>
+          </div>
+          <table class="table table-striped table-bordered table-hover">
+            <thead class="thead table-warning">
+              <th class="text-center">#</th>
+              <th class="text-center">Variable Name</th>
+              <th class="text-center">Variable Value</th>
+              <th class="text-center">Action</th>
+            </thead>
+            <tbody class="tbody">
+              <tr *ngFor="let a_var of current_play_vars ; index as vars_counter">
+                <td class="text-center">{{vars_counter+1}}</td>
+                <td class="text-center">
+                  {{a_var.key}}
+                </td>
+                <td class="text-center">
+                  <input type="text" [(ngModel)]="a_var.value">
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-danger" (click)="delete_from_current_play_vars(vars_counter)">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-center">{{current_play_vars.length+1}}</td>
+                <td class="text-center">
+                  <input type="text" [(ngModel)]="current_play_var_key">
+                </td>
+                <td class="text-center">
+                  <input type="text" [(ngModel)]="current_play_var_value">
+                </td>
+                <td class="text-center">
+                  <button *ngIf="current_play_var_key && current_play_var_value else na_add_var_template" type="button" class="btn btn-sm btn-success" (click)="add_to_current_play_vars()">Add</button>
+                  <ng-template #na_add_var_template>
+                    <button type="button" class="btn btn-sm btn-success disabled" disabled>Add</button>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="register_output_variable_name_validation_error" class="alert alert-warning my-2 text-center text-strong" role="alert">
+            <strong>{{register_output_variable_name_validation_error}}</strong>
+          </div>
+
+          <div *ngIf="current_play_composition_validation_error" class="alert alert-danger my-2 text-center text-strong" role="alert">
+            <strong>{{current_play_composition_validation_error}}</strong>
+          </div>
+
+          <table class="table table-bordered table-striped text-center my-5">
+            <thead class="thead text-white bg-secondary">
+              <th class="text-center">#</th>
+              <th class="text-center">Module</th>
+              <th class="text-center">Sub-Module</th>
+              <th class="text-center">Task</th>
+              <th class="text-center">Name</th>
+              <th class="text-center">I/O</th>
+              <th class="text-center">Metadata</th>
+              <th class="text-center">Register Output?</th>
+              <th class="text-center">Action</th>
+            </thead>
+            <tbody class="tbody" cdkDropList (cdkDropListDropped)="onDrop($event)">
+              <tr *ngFor="let a_selected_command of selected_commands_list ; index as selected_commands_counter" cdkDrag cdkDragLockAxis="y">
+                <td class="text-center">
+                  <div class="drag-handle">
+                    <ng-container [ngTemplateOutlet]="dragHandleTmpl">
+                                </ng-container>
+                                <ng-template #dragHandleTmpl>
+                                    <svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </ng-template>
+                                {{selected_commands_counter+1}}
+                            </div>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-secondary btn-block">
+                    {{a_selected_command.command.moduleRef.moduleName}}
+                  </button>
+                </td>
+                <td class="text-center">
+                  <button *ngIf="a_selected_command.command.subModuleRef ; else na_selected_sub_module_template" class="btn btn-secondary btn-block">
+                    {{a_selected_command.command.subModuleRef.subModuleName}}
+                  </button>
+                  <ng-template #na_selected_sub_module_template>
+                    <button class="btn btn-light btn-sm disabled" disabled>
+                      N/A
+                    </button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-secondary btn-block">
+                    {{a_selected_command.command.command}}
+                  </button>
+                </td>
+                <td class="text-center">{{a_selected_command.task_name}}</td>
+                <td class="text-center">
+                  <div class="btn-group btn-group-sm">
+                    <ng-template #input_selected_tasks_composition_template let-c="close" let-d="dismiss">
+                      <div class="card bg-dark">
+                        <div class="modal-header bg-dark text-white">
+                          <div class="card-body text-center mx-auto"><h4 class="card-title">Input Parameter(s)</h4></div>
+                          <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div> 
+                        <div class="card-body bg-light">
+                          <table class="table table-dark">
+                            <thead class="thead">
+                              <th class="text-center">#</th>
+                              <th class="text-center">Field Name</th>
+                              <th class="text-center">Description</th>
+                              <th class="text-center">Type</th>
+                              <th class="text-center">Default</th>
+                              <th class="text-center">Choices</th>
+                              <th class="text-center">Value</th>
+                            </thead>
+                            <tbody class="tbody">
+                              <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
+                                <td class="text-center">{{input_field_counter+1}}</td>
+                                <td class="text-center">{{input_field.fieldName}}</td>
+                                <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                <td class="text-center">{{input_field.fieldType}}</td>
+                                <td class="text-center">{{input_field.defaultValue}}</td>
+                                <td class="text-center">{{input_field.choices}}</td>
+                                <td class="text-center">
+                                  <input type="text" [(ngModel)]="input_field.value">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <button *ngIf="a_selected_command && a_selected_command.inputFields ; else no_input_selected_tasks_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_selected_tasks_composition_template)">Input</button>
+                    <ng-template #no_input_selected_tasks_available_template>
+                      <button type="button" class="btn btn-primary btn-sm disabled" disabled>Input</button>
+                    </ng-template>
+                    <ng-template #output_selected_tasks_composition_template let-c="close" let-d="dismiss">
+                      <div class="card bg-dark">
+                        <div class="modal-header bg-dark text-white">
+                          <div class="card-body text-center mx-auto"><h4 class="card-title">Output Parameter(s)</h4></div>
+                          <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div> 
+                        <div class="card-body bg-light">
+                          <table class="table table-dark">
+                            <thead class="thead">
+                              <th class="text-center">#</th>
+                              <th class="text-center">Field Name</th>
+                              <th class="text-center">Description</th>
+                              <th class="text-center">Returned Always?</th>
+                            </thead>
+                            <tbody class="tbody">
+                              <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
+                                <td class="text-center">{{output_field_counter+1}}</td>
+                                <td class="text-center">{{output_field.fieldName}}</td>
+                                <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                <td class="text-center">{{output_field.returnedAlways}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <button type="button" *ngIf="a_selected_command && a_selected_command.outputFields ; else no_output_selected_tasks_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_selected_tasks_composition_template)">Output</button>
+                    <ng-template #no_output_selected_tasks_available_template>
+                      <button type="button" class="btn btn-success btn-sm disabled" disabled>Output</button>
+                    </ng-template>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <ng-template #selected_tasks_metadata_content let-c="close" let-d="dismiss">
+                    <div class="card bg-dark">
+                      <div class="modal-header bg-dark text-white">
+                        <div class="card-body text-center mx-auto"><h4 class="card-title">Metadata</h4></div>
+                        <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div> 
+                      <div class="card-body bg-light">
+                        <table class="table table-striped table-bordered">
+                          <thead class="thead">
+                            <th class="text-center table-primary">Play Name</th>
+                            <th class="text-center table-success">Task Name</th>
+                          </thead>
+                          <tbody class="tbody">
+                            <td class="text-center">{{current_play_name}}</td>
+                            <td class="text-center">{{a_selected_command.task_name}}</td>
+                          </tbody>
+                        </table>
+                        <table class="table table-dark table-striped table-bordered">
+                          <thead class="thead">
+                            <th class="text-center">Ignore Errors?</th>
+                            <th class="text-center">No Log?</th>
+                            <th class="text-center">Delegate To</th>
+                            <th class="text-center">Become</th>
+                            <th class="text-center">Become Method</th>
+                            <th class="text-center">With Items?</th>
+                            <th class="text-center">When?</th>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="text-center">
+                                <input type="checkbox" [checked]="a_selected_command.optional" (click)="toggle_selected_command_optional(-1, selected_commands_counter)">
+                              </td>
+                              <td class="text-center">
+                                <input type="checkbox" [checked]="a_selected_command.no_log" (click)="toggle_selected_command_no_log(-1, selected_commands_counter)">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="a_selected_command.delegate_to">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="a_selected_command.become">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="a_selected_command.become_method">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="a_selected_command.with_items">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="a_selected_command.when">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <button *ngIf="a_selected_command ; else no_metadata_button_template" type="button" class="btn btn-sm btn-dark" (click)="openLarge(selected_tasks_metadata_content)">Metadata</button>
+                  <ng-template #no_metadata_button_template>
+                    <button type="button" class="btn btn-sm btn-dark disabled" disabled>Metadata</button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <input type="text" [(ngModel)]="a_selected_command.register" (focusout)="validate_register_output_variable_name(-1, selected_commands_counter, $event.target.value)">
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-danger" (click)="delete_task(-1, selected_commands_counter)">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-center">{{selected_commands_list.length+1}}</td>
+                <td class="text-center">
+                  <div *ngIf="get_selected_value('Module') ; else na_module_template" class="dropdown">
+                    <button class="btn btn-info btn-block dropdown-toggle" id="dropdownMenuModule" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{get_selected_value('Module')}}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right btn btn-block text-center bg-light" aria-labelledby="dropdownMenuModule" style="max-height: 300px; overflow-y: auto; width: max-content;">
+                      <a role="button" *ngFor="let module of modules_list" class="dropdown-item btn" (click)="select_module(module)">{{module.moduleName}}</a>
+                    </div>
+                  </div>
+                  <ng-template #na_module_template>
+                    <button type="button" class="btn btn-sm btn-light disabled" disabled>N/A</button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <div *ngIf="get_selected_value('Sub-Module') ; else na_sub_module_template" class="dropdown">
+                    <button class="btn btn-info btn-block dropdown-toggle" id="dropdownMenuSubModule" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{get_selected_value('Sub-Module')}}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right btn btn-block text-center bg-light" aria-labelledby="dropdownMenuSubModule" style="max-height: 300px; overflow-y: auto; width: max-content;">
+                      <a role="button" *ngFor="let sub_module of sub_modules_list" class="dropdown-item btn" (click)="select_sub_module(sub_module)">{{sub_module.subModuleName}}</a>
+                    </div>
+                  </div>
+                  <ng-template #na_sub_module_template>
+                    <button type="button" class="btn btn-sm btn-light disabled" disabled>N/A</button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <div *ngIf="get_selected_value('Command') ; else na_command_template" class="dropdown">
+                    <button class="btn btn-info btn-block dropdown-toggle" id="dropdownMenuCommand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{get_selected_value('Command')}}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right btn btn-block text-center bg-light" aria-labelledby="dropdownMenuCommand" style="max-height: 300px; overflow-y: auto; width: max-content;">
+                      <a role="command" *ngFor="let command of commands_list" class="dropdown-item btn" (click)="select_command(command)">{{command.command}}</a>
+                    </div>
+                  </div>
+                  <ng-template #na_command_template>
+                    <button type="button" class="btn btn-sm btn-light disabled" disabled>N/A</button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <button (click)="toggle_edit_task_description_selected(true)" class="btn btn-primary btn-rounded" *ngIf="current_command_details_selected && !edit_task_name_selected ; else custom_task_name_template">
+                    {{task_name_selected}} &nbsp;
+                    <i class="fa fa-edit"></i>
+                </button>
+                <ng-template #custom_task_name_template>
+                  <input autofocus (focusout)="toggle_edit_task_description_selected(false)" *ngIf="edit_task_name_selected ; else default_task_name_template" type="text" [(ngModel)]="task_name_selected">
+                  <ng-template #default_task_name_template>
+                    <p class="text-black text-muted">Will be populated after selection ...</p>
+                  </ng-template>
+              </ng-template>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group btn-group-sm">
+                    <ng-template #input_composition_template let-c="close" let-d="dismiss">
+                      <div class="card bg-dark">
+                        <div class="modal-header bg-dark text-white">
+                          <div class="card-body text-center mx-auto"><h4 class="card-title">Input Parameter(s)</h4></div>
+                          <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div> 
+                        <div class="card-body bg-light">
+                          <table class="table table-dark">
+                            <thead class="thead">
+                              <th class="text-center">#</th>
+                              <th class="text-center">Field Name</th>
+                              <th class="text-center">Description</th>
+                              <th class="text-center">Type</th>
+                              <th class="text-center">Default</th>
+                              <th class="text-center">Choices</th>
+                              <th class="text-center">Value</th>
+                            </thead>
+                            <tbody class="tbody">
+                              <tr *ngFor="let input_field of current_command_details_selected.inputFields ; index as input_field_counter">
+                                <td class="text-center">{{input_field_counter+1}}</td>
+                                <td class="text-center">{{input_field.fieldName}}</td>
+                                <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                <td class="text-center">{{input_field.fieldType}}</td>
+                                <td class="text-center">{{input_field.defaultValue}}</td>
+                                <td class="text-center">{{input_field.choices}}</td>
+                                <td class="text-center">
+                                  <input type="text" [(ngModel)]="input_field.value" placeholder="{{input_field.defaultValue}}">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <button *ngIf="current_command_details_selected && current_command_details_selected.inputFields ; else no_input_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_composition_template)">Input</button>
+                    <ng-template #no_input_available_template>
+                      <button type="button" class="btn btn-primary btn-sm disabled" disabled>Input</button>
+                    </ng-template>
+                    <ng-template #output_composition_template let-c="close" let-d="dismiss">
+                      <div class="card bg-dark">
+                        <div class="modal-header bg-dark text-white">
+                          <div class="card-body text-center mx-auto"><h4 class="card-title">Output Parameter(s)</h4></div>
+                          <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div> 
+                        <div class="card-body bg-light">
+                          <table class="table table-dark">
+                            <thead class="thead">
+                              <th class="text-center">#</th>
+                              <th class="text-center">Field Name</th>
+                              <th class="text-center">Description</th>
+                              <th class="text-center">Type</th>
+                              <th class="text-center">Returned Always?</th>
+                            </thead>
+                            <tbody class="tbody">
+                              <tr *ngFor="let output_field of current_command_details_selected.outputFields ; index as output_field_counter">
+                                <td class="text-center">{{output_field_counter+1}}</td>
+                                <td class="text-center">{{output_field.fieldName}}</td>
+                                <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                <td class="text-center">{{output_field.fieldType}}</td>
+                                <td class="text-center">{{output_field.returnedAlways}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <button type="button" *ngIf="current_command_details_selected && current_command_details_selected.outputFields ; else no_output_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_composition_template)">Output</button>
+                    <ng-template #no_output_available_template>
+                      <button type="button" class="btn btn-success btn-sm disabled" disabled>Output</button>
+                    </ng-template>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <ng-template #metadata_content let-c="close" let-d="dismiss">
+                    <div class="card bg-dark">
+                      <div class="modal-header bg-dark text-white">
+                        <div class="card-body text-center mx-auto"><h4 class="card-title">Metadata</h4></div>
+                        <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div> 
+                      <div class="card-body bg-light">
+                        <table class="table table-striped table-bordered">
+                          <thead class="thead">
+                            <th class="text-center table-primary">Play Name</th>
+                            <th class="text-center table-success">Task Name</th>
+                          </thead>
+                          <tbody class="tbody">
+                            <td class="text-center">{{current_play_name}}</td>
+                            <td class="text-center">{{task_name_selected}}</td>
+                          </tbody>
+                        </table>
+                        <table class="table table-dark table-striped table-bordered">
+                          <thead class="thead">
+                            <th class="text-center">Ignore Errors?</th>
+                            <th class="text-center">No Log?</th>
+                            <th class="text-center">Delegate To</th>
+                            <th class="text-center">Become</th>
+                            <th class="text-center">Become Method</th>
+                            <th class="text-center">With Items?</th>
+                            <th class="text-center">When?</th>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="text-center">
+                                <input type="checkbox" (click)="toggle_current_command_selected_optional()" [checked]="is_current_command_selected_optional">
+                              </td>
+                              <td class="text-center">
+                                <input type="checkbox" (click)="toggle_current_command_selected_no_log()" [checked]="is_current_command_selected_no_log">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="current_command_selected_delegate_to" placeholder="example - 'localhost'">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="current_command_selected_become" placeholder="example - 'root'">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="current_command_selected_become_method" placeholder="example - 'su'">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="current_command_selected_with_items">
+                              </td>
+                              <td class="text-center">
+                                <input type="text" [(ngModel)]="current_command_selected_when">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <button *ngIf="current_command_details_selected ; else no_metadata_button_template" type="button" class="btn btn-sm btn-dark" (click)="openLarge(metadata_content)">Metadata</button>
+                  <ng-template #no_metadata_button_template>
+                    <button type="button" class="btn btn-sm btn-dark disabled" disabled>Metadata</button>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <input type="text" [(ngModel)]="current_command_selected_register" placeholder="Task_X_output" (focusout)="validate_register_output_variable_name(-1, -1, $event.target.value)">
+                </td>
+                <td class="text-center">
+                  <div *ngIf="current_command_details_selected ; else no_confirm_button_template" class="btn-group btn-group-sm">
+                    <button class="btn btn-warning btn-sm" (click)="reset_all_selections()">Reset</button>
+                    <button class="btn btn-success btn-sm" (click)="confirm_task_addition()">Confirm</button>
+                  </div>
+                  
+                  <ng-template #no_confirm_button_template>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-warning btn-sm disabled" disabled>Reset</button>
+                      <button class="btn btn-success btn-sm disabled" disabled>Confirm</button>
+                    </div>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <button type="button" class="btn btn-lg btn-block btn-outline-secondary" (click)="cancel_current_play_composition()">Cancel</button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-lg btn-block btn-outline-info" (click)="reset_current_play_composition()">Reset</button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary" (click)="save_current_play_composition()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!hide_plays_detailed_view" class="card mt-2">
+      <div class="card-header bg-secondary">
+        <h4 class="text-white">Plays Detailed View</h4>
+      </div>
+      <div class="card-body bg-light">
+        <div id="accordion" class="my-2">
+          <div *ngFor="let play of intermediate_plays_list ; index as play_counter" class="card mb-2">
+            <div class="card-header bg-info" [id]="'heading'+play.id" data-toggle="collapse" data-parent="#accordion" [attr.data-target]="'#collapse'+play.id" aria-expanded="true" [attr.aria-controls]="'collapse'+play.id">
+              <h6 class="mb-0 text-white">
+                <b>{{play_counter+1}}. {{play.name}} (Click to toggle)</b>
+              </h6>
+            </div>
+            <div [id]="'collapse'+play.id" class="collapse" [attr.aria-labelledby]="'heading'+play.id" data-parent="#accordion">
+              <div class="card-body">
+                <table class="table table-bordered table-striped">
+                  <thead class="thead table-success">
+                    <th class=text-center>Play ID</th>
+                    <th class=text-center>Play Name</th>
+                  </thead>
+                  <tbody class="tbody">
+                    <td class="text-center">{{play.id}}</td>
+                    <td class="text-center">{{play.name}}</td>
+                  </tbody>
+                </table>
+                <table class="table table-bordered table-striped">
+                  <thead class="thead table-primary">
+                    <th class=text-center>Gather Facts</th>
+                    <th class=text-center>Hosts Count</th>
+                    <th class=text-center>Vars Count</th>
+                    <th class=text-center>Tasks Count</th>
+                  </thead>
+                  <tbody class="tbody">
+                    <td class="text-center">{{play.gather_facts}}</td>
+                    <td class="text-center">{{play.hosts.length}}</td>
+                    <td class="text-center">{{get_object_keys_count(play.vars)}}</td>
+                    <td class="text-center">{{play.commands_list.length}}</td>
+                  </tbody>
+                </table>
+                <table class="table table-warning table-bordered table-striped table-hover">
+                  <thead class="thead">
+                    <th class="text-center">#</th>
+                    <th class="text-center">Variable Name</th>
+                    <th class="text-center">Variable Value</th>
+                    <th class="text-center">Action</th>
+                  </thead>
+                  <tbody class="tbody">
+                    <tr *ngFor="let a_var of play.vars ; index as vars_counter">
+                      <td class="text-center">{{vars_counter+1}}</td>
+                      <td class="text-center">{{a_var.key}}</td>
+                      <td class="text-center">
+                        <input type="text" [(ngModel)]="a_var.value">
+                      </td>
+                      <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="delete_from_play_vars(play_counter, vars_counter)">Delete</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="!show_add_play_form && register_output_variable_name_validation_error" class="alert alert-warning my-2 text-center text-strong" role="alert">
+                  <strong>{{register_output_variable_name_validation_error}}</strong>
+                </div>
+                <table class="table table-bordered table-striped text-center my-5">
+                  <thead class="thead table-secondary">
+                    <th class="text-center">#</th>
+                    <th class="text-center">Module</th>
+                    <th class="text-center">Sub-Module</th>
+                    <th class="text-center">Task</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">I/O</th>
+                    <th class="text-center">Metadata</th>
+                    <th class="text-center">Register Output?</th>
+                    <th class="text-center">Action</th>
+                  </thead>
+                  <tbody class="tbody" cdkDropList (cdkDropListDropped)="onDropInsidePlay( play_counter , $event)">
+                    <tr *ngFor="let a_selected_command of play.commands_list ; index as selected_commands_counter" cdkDrag cdkDragLockAxis="y">
+                      <td class="text-center">
+                        <div class="drag-handle">
+                          <ng-container [ngTemplateOutlet]="dragHandleTmpl">
+                                      </ng-container>
+                                      <ng-template #dragHandleTmpl>
+                                          <svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                                              xmlns="http://www.w3.org/2000/svg">
+                                              <path fill-rule="evenodd"
+                                                  d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"
+                                                  clip-rule="evenodd" />
+                                          </svg>
+                                      </ng-template>
+                                      {{selected_commands_counter+1}}
+                                  </div>
+                      </td>
+                      <td class="text-center">
+                        <button class="btn btn-secondary btn-block">
+                          {{a_selected_command.command.moduleRef.moduleName}}
+                        </button>
+                      </td>
+                      <td class="text-center">
+                        <button *ngIf="a_selected_command.command.subModuleRef ; else na_selected_sub_module_template" class="btn btn-secondary btn-block">
+                          {{a_selected_command.command.subModuleRef.subModuleName}}
+                        </button>
+                        <ng-template #na_selected_sub_module_template>
+                          <button class="btn btn-light btn-sm disabled" disabled>
+                            N/A
+                          </button>
+                        </ng-template>
+                      </td>
+                      <td class="text-center">
+                        <button class="btn btn-secondary btn-block">
+                          {{a_selected_command.command.command}}
+                        </button>
+                      </td>
+                      <td class="text-center">{{a_selected_command.task_name}}</td>
+                      <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                          <ng-template #input_selected_tasks_composition_template let-c="close" let-d="dismiss">
+                            <div class="card bg-dark">
+                              <div class="modal-header bg-dark text-white">
+                                <div class="card-body text-center mx-auto"><h4 class="card-title">Input Parameter(s)</h4></div>
+                                <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div> 
+                              <div class="card-body bg-light">
+                                <table class="table table-dark">
+                                  <thead class="thead">
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Field Name</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Default</th>
+                                    <th class="text-center">Choices</th>
+                                    <th class="text-center">Value</th>
+                                  </thead>
+                                  <tbody class="tbody">
+                                    <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
+                                      <td class="text-center">{{input_field_counter+1}}</td>
+                                      <td class="text-center">{{input_field.fieldName}}</td>
+                                      <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                      <td class="text-center">{{input_field.fieldType}}</td>
+                                      <td class="text-center">{{input_field.defaultValue}}</td>
+                                      <td class="text-center">{{input_field.choices}}</td>
+                                      <td class="text-center">
+                                        <input type="text" [(ngModel)]="input_field.value">
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </ng-template>
+                          <button *ngIf="a_selected_command && a_selected_command.inputFields ; else no_input_selected_tasks_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_selected_tasks_composition_template)">Input</button>
+                          <ng-template #no_input_selected_tasks_available_template>
+                            <button type="button" class="btn btn-primary btn-sm disabled" disabled>Input</button>
+                          </ng-template>
+                          <ng-template #output_selected_tasks_composition_template let-c="close" let-d="dismiss">
+                            <div class="card bg-dark">
+                              <div class="modal-header bg-dark text-white">
+                                <div class="card-body text-center mx-auto"><h4 class="card-title">Output Parameter(s)</h4></div>
+                                <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div> 
+                              <div class="card-body bg-light">
+                                <table class="table table-dark">
+                                  <thead class="thead">
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Field Name</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-center">Returned Always?</th>
+                                  </thead>
+                                  <tbody class="tbody">
+                                    <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
+                                      <td class="text-center">{{output_field_counter+1}}</td>
+                                      <td class="text-center">{{output_field.fieldName}}</td>
+                                      <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                      <td class="text-center">{{output_field.returnedAlways}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </ng-template>
+                          <button type="button" *ngIf="a_selected_command && a_selected_command.outputFields ; else no_output_selected_tasks_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_selected_tasks_composition_template)">Output</button>
+                          <ng-template #no_output_selected_tasks_available_template>
+                            <button type="button" class="btn btn-success btn-sm disabled" disabled>Output</button>
+                          </ng-template>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <ng-template #selected_tasks_metadata_content let-c="close" let-d="dismiss">
+                          <div class="card bg-dark">
+                            <div class="modal-header bg-dark text-white">
+                              <div class="card-body text-center mx-auto"><h4 class="card-title">Metadata</h4></div>
+                              <button type="button" class="close text-white" aria-label="Close" (click)="d('Cross click')">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div> 
+                            <div class="card-body bg-light">
+                              <table class="table table-striped table-bordered">
+                                <thead class="thead">
+                                  <th class="text-center table-primary">Play Name</th>
+                                  <th class="text-center table-success">Task Name</th>
+                                </thead>
+                                <tbody class="tbody">
+                                  <td class="text-center">{{play.name}}</td>
+                                  <td class="text-center">{{a_selected_command.task_name}}</td>
+                                </tbody>
+                              </table>
+                              <table class="table table-dark table-striped table-bordered">
+                                <thead class="thead">
+                                  <th class="text-center">Ignore Errors?</th>
+                                  <th class="text-center">No Log?</th>
+                                  <th class="text-center">Delegate To</th>
+                                  <th class="text-center">Become</th>
+                                  <th class="text-center">Become Method</th>
+                                  <th class="text-center">With Items?</th>
+                                  <th class="text-center">When?</th>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td class="text-center">
+                                      <input type="checkbox" [checked]="a_selected_command.optional" (click)="toggle_selected_command_optional(play_counter, selected_commands_counter)">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="checkbox" [checked]="a_selected_command.no_log" (click)="toggle_selected_command_no_log(play_counter, selected_commands_counter)">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="text" [(ngModel)]="a_selected_command.delegate_to">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="text" [(ngModel)]="a_selected_command.become">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="text" [(ngModel)]="a_selected_command.become_method">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="text" [(ngModel)]="a_selected_command.with_items">
+                                    </td>
+                                    <td class="text-center">
+                                      <input type="text" [(ngModel)]="a_selected_command.when">
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </ng-template>
+                        <button *ngIf="a_selected_command ; else no_metadata_button_template" type="button" class="btn btn-sm btn-dark" (click)="openLarge(selected_tasks_metadata_content)">Metadata</button>
+                        <ng-template #no_metadata_button_template>
+                          <button type="button" class="btn btn-sm btn-dark disabled" disabled>Metadata</button>
+                        </ng-template>
+                      </td>
+                      <td class="text-center">
+                        <input type="text" [(ngModel)]="a_selected_command.register" (focusout)="validate_register_output_variable_name(play_counter, selected_commands_counter, $event.target.value)">
+                      </td>
+                      <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="delete_task(play_counter, selected_commands_counter)">Delete</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-block btn-danger">Delete Play</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="intermediate_plays_list.length == 0" class="alert alert-info text-center text-strong" role="alert">
+        <strong>Add some new plays to see details !!!</strong>
+      </div>
+    </div>
+    <button *ngIf="!show_add_play_form && intermediate_plays_list.length > 0 ; else disable_generate_playbook_button_template" class="btn btn-primary btn-block my-2" (click)="create_plays_request()"><b>Generate Playbook</b></button>
+    <ng-template #disable_generate_playbook_button_template>
+      <button class="btn btn-primary btn-block my-2 disabled" disabled><b>Generate Playbook</b></button>
+    </ng-template>
+</div>
+<div *ngIf="response_yaml" class="container-fluid">
+  <div class="card">
+    <div class="card-header text-center">
+      <h5>Playbook YAML</h5>
+    </div>
+    <div class="card-body">
+      <pre>{{response_yaml}}</pre>
+    </div>
+  </div>
+</div>
