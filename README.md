@@ -54,7 +54,7 @@ To pull the image :
 
 	docker pull zzzmahesh/ansible-playbook-generator-ui
 
-## Run Conductor Boot : Docker Compose
+## Run Docker Compose
 
 Clone the repository to your local.
 
