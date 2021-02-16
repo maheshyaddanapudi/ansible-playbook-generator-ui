@@ -67,7 +67,7 @@
         </div>
         <div class="row">
           <div class="col-md-6">
-            <button *ngIf="plays.length >0 ; else disable_reset_composition_button_template" class="btn btn-danger btn-block text-white" (click)="reset_composition()"><b>Reset Composition</b></button>
+            <button *ngIf="intermediate_plays_list.length >0 ; else disable_reset_composition_button_template" class="btn btn-danger btn-block text-white" (click)="reset_composition()"><b>Reset Composition</b></button>
             <ng-template #disable_reset_composition_button_template>
               <button class="btn btn-light btn-block disabled" disabled><b>Reset Composition</b></button>
             </ng-template>
