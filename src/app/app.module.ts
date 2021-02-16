@@ -8,7 +8,8 @@ import { HomeComponent } from './Pages/home/home.component';
 import { HeaderComponent } from './Pages/Layout/header/header.component';
 import { FooterComponent } from './Pages/Layout/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';  
-import { AnsibleCommandDetailerControllerService, ApiModule, BASE_PATH } from './Services/Rest/ansible-docs-boot';
+import { AnsibleCommandDetailerControllerService, ApiModule as AnsibleDocsBootApiModule, BASE_PATH as ANSIBLE_DOCS_BOOT_BASE_URL } from './Services/Rest/ansible-docs-boot';
+import { PlaybookRequestService, ApiModule as AnsiblePlaybookJson2YamlApiModule, BASE_PATH as ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL } from './Services/Rest/ansible-playbook-json2yaml';
 import { CreateAnsiblePlaybookComponent } from './Pages/Ansible/Create/create-ansible-playbook/create-ansible-playbook.component'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ng6-toastr-notifications';
@@ -27,7 +28,8 @@ import { environment } from '../environments/environment'
     BrowserModule,
     AppRoutingModule,  
     HttpClientModule,  
-    ApiModule, 
+    AnsibleDocsBootApiModule, 
+    AnsiblePlaybookJson2YamlApiModule,
     NgbModule,
     FormsModule,
     DragDropModule,
@@ -37,8 +39,10 @@ import { environment } from '../environments/environment'
     })
   ],
   providers: [
-    { provide: BASE_PATH, useValue: environment.ANSIBLE_DOCS_BOOT_BASE_URL }   ,
-    AnsibleCommandDetailerControllerService
+    { provide: ANSIBLE_DOCS_BOOT_BASE_URL, useValue: environment.ANSIBLE_DOCS_BOOT_BASE_URL }   ,
+    AnsibleCommandDetailerControllerService,
+    { provide: ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL, useValue: environment.ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL }   ,
+    PlaybookRequestService
   ],
   bootstrap: [AppComponent]
 })

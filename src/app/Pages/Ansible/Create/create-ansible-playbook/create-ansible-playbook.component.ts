@@ -7,7 +7,7 @@ import { AnsibleCommandDetailerControllerService, CommandDetailsDTO, CommandRef,
 import { IntermediatePlay } from 'src/app/Modals/Display/IntermediatePlay';
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 import { IntermediateVar } from 'src/app/Modals/Display/IntermediateVar';
-import { AnsiblePlaybookJson2yamlService } from 'src/app/Services/Rest/ansible-playbook-json2yaml/ansible-playbook-json2yaml.service';
+import { PlaybookRequestService } from 'src/app/Services/Rest/ansible-playbook-json2yaml';
 
 @Component({
   selector: 'app-create-ansible-playbook',
@@ -65,7 +65,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   public response_yaml: any
 
 
-  constructor(private ansiblePlaybookJson2yamlService: AnsiblePlaybookJson2yamlService, private ansibleCommandDetailerControllerService: AnsibleCommandDetailerControllerService, private modalService: NgbModal) {
+  constructor(private playbookRequestService: PlaybookRequestService, private ansibleCommandDetailerControllerService: AnsibleCommandDetailerControllerService, private modalService: NgbModal) {
     
    }
 
@@ -712,7 +712,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
 
     console.log(JSON.stringify(plays))
 
-    await this.ansiblePlaybookJson2yamlService.request_yaml(plays).then((response: any) => {
+    await this.playbookRequestService.generateYamlPost(plays).toPromise().then((response: any) => {
       console.log('response', response)
     }).catch((err_response: HttpErrorResponse) => {
 

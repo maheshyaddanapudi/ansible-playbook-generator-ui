@@ -1,0 +1,5 @@
+.git/
+dist/
+node_modules/
+ansible-docs-boot/
+ansible-playbook-json2yaml/
