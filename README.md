@@ -61,7 +61,6 @@ Clone the repository to your local.
     git clone https://github.com/maheshyaddanapudi/ansible-playbook-generator-ui.git
 
 Verify if tha git submodules ansible-docs-boot and ansible-playbook-json2yaml have corresponding Dockerfile inside the respective folders.
-
 If not, use the below command to link and checkout
 
     git submodule add -b main -f https://github.com/maheshyaddanapudi/ansible-docs-boot
