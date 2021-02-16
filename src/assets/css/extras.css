@@ -1,0 +1,17 @@
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  .option-container {
+    padding: 10px;
+  }
+  .option-filter {
+    margin: 10px;
+  }
+  .option-list {
+    padding: 0 0 0 12px;
+  }

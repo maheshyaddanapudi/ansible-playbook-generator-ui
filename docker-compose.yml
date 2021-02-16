@@ -1,0 +1,29 @@
+version: '2.2'
+
+services:
+  ansible-docs-boot:
+    image: ansible-docs-boot
+    build:
+      context: ansible-docs-boot
+    restart: on-failure
+    ports:
+      - 8080:8080
+  ansible-playbook-json2yaml:
+    image: ansible-playbook-json2yaml
+    build:
+      context: ansible-playbook-json2yaml
+    restart: on-failure
+    ports:
+      - 5000:5000
+  ansible-playbook-generator-ui:
+    image: ansible-playbook-generator-ui:latest
+    build:
+      context: .
+    restart: on-failure
+    depends_on:
+      ansible-playbook-json2yaml:
+        condition: service_started
+      ansible-docs-boot:
+        condition: service_started
+    ports:
+      - 80:80

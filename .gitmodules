@@ -1,0 +1,7 @@
+[submodule "ansible-docs-boot"]
+	path = ansible-docs-boot
+	url = https://github.com/maheshyaddanapudi/ansible-docs-boot
+[submodule "ansible-playbook-json2yaml"]
+	path = ansible-playbook-json2yaml
+	url = https://github.com/maheshyaddanapudi/ansible-playbook-json2yaml
+	branch = main

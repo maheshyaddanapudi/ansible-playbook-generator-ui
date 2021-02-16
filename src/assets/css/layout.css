@@ -1,0 +1,58 @@
+html,
+
+  body {
+  
+  height: 100%;
+  
+  position: relative;
+  
+  
+  }
+  
+  
+  
+  
+  app-root {
+  
+  min-height: 100%;
+  
+  display: block;
+  
+  position: relative;
+  
+  padding-top: 56px; 
+  
+  padding-bottom: 56px; 
+  
+  }
+  
+  header {
+  
+      position: absolute;
+      
+      top: 0;
+      right: 0;
+      left: 0;
+      padding: 1rem;
+      text-align: center;
+      
+      width: 100%;
+      
+      }
+  
+  footer {
+  
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  
+  }
+  
+  .scrollable-menu {
+      height: auto;
+      max-height: 200px;
+      overflow-x: hidden;
+  }

@@ -1,0 +1,10 @@
+{
+    "/generate-yaml": {
+        "target": "http://localhost:2020",
+        "secure": false
+      },
+      "/api/**": {
+        "target": "http://localhost:8080",
+        "secure": false
+      }
+}
