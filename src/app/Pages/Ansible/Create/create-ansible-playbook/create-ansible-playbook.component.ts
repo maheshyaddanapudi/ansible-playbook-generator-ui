@@ -121,6 +121,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   }
 
   reset_composition(){
+    this.response_yaml = undefined
     this.plays = []
     this.intermediate_plays_list = []
     this.show_add_play_form = false
@@ -628,6 +629,8 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
 
   async create_plays_request(){
 
+    this.show_loading = true;
+
     console.log('Creating Plays Request ...')
 
     let plays: Play[] = []
@@ -719,6 +722,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       if(err_response.status == 200)
       {
         this.response_yaml = err_response.error.text
+
         console.log(this.response_yaml)
       }
       else{
@@ -728,6 +732,8 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
         console.log('Response Error - ', err_response.error.text)
       }
     })
+
+    this.show_loading = false;
   }
 
   get_comma_delimited_length(object: string): number{
