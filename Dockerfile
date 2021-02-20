@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-RUN apk add -y --update nodejs npm 
+RUN apk add --update nodejs npm 
 
 RUN mkdir -p /app
 WORKDIR /app
