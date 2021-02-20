@@ -138,6 +138,8 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     this.reset_all_selections()
     this.selected_commands_list = []
     this.inventory_hosts_list = []
+    this.helper = true
+    this.start_helper_services()
   }
 
   async select_module(selected_module: ModuleRef){
