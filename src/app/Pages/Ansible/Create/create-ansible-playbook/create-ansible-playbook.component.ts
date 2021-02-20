@@ -756,11 +756,30 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     await this.intermediate_plays_list.forEach(async (a_play: IntermediatePlay) => {
       let hosts_as_list: string[] = a_play.hosts.split(',');
       console.log(hosts_as_list)
-      await hosts_as_list.forEach(async (a_host: string)=> {
-        await this.inventory_hosts_list.push(a_host)
+      await hosts_as_list.forEach((a_host: string)=> {
+
+        let duplicate: boolean = false
+
+        this.inventory_hosts_list.forEach((an_added_host: string) => {
+            if(!duplicate && a_host == an_added_host)
+            {
+              duplicate = true
+            }
+        })
+        if(!duplicate)
+        {
+          this.inventory_hosts_list.push(a_host)
+        }
       })
     })
 
     console.log(this.inventory_hosts_list)
+  }
+
+  get_coding_standard_converted_name(non_standard_name: string): string{
+    non_standard_name = non_standard_name.trim()
+    non_standard_name = non_standard_name.split(' ').join('_')
+
+    return non_standard_name;
   }
 }

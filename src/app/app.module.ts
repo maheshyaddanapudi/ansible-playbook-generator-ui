@@ -14,7 +14,14 @@ import { CreateAnsiblePlaybookComponent } from './Pages/Ansible/Create/create-an
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { BackButtonDisableModule } from 'angular-disable-browser-back-button';
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import {PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   declarations: [
@@ -33,6 +40,7 @@ import { environment } from '../environments/environment'
     NgbModule,
     FormsModule,
     DragDropModule,
+    PerfectScrollbarModule,
     ToastrModule.forRoot(),
     BackButtonDisableModule.forRoot({
       preserveScrollPosition: true
@@ -42,7 +50,15 @@ import { environment } from '../environments/environment'
     { provide: ANSIBLE_DOCS_BOOT_BASE_URL, useValue: environment.ANSIBLE_DOCS_BOOT_BASE_URL }   ,
     AnsibleCommandDetailerControllerService,
     { provide: ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL, useValue: environment.ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL }   ,
-    PlaybookRequestService
+    PlaybookRequestService,
+    {
+      provide:
+      PERFECT_SCROLLBAR_CONFIG,
+      // DROPZONE_CONFIG,
+      useValue:
+      DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+      // DEFAULT_DROPZONE_CONFIG,
+    }
   ],
   bootstrap: [AppComponent]
 })
