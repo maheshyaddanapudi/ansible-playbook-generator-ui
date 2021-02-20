@@ -925,6 +925,16 @@
           <div *ngFor="let a_host of inventory_hosts_list">
             {{a_host}}
           </div>
+          <br>
+          <div *ngIf="intermediate_plays_list.length > 1">
+            <div *ngFor="let an_intermediate_play of intermediate_plays_list">
+              <div>[{{get_coding_standard_converted_name(an_intermediate_play.name)}}_hosts]</div>
+              <div *ngFor="let a_host of an_intermediate_play.hosts.split(',')">
+                {{a_host}}
+              </div>
+              <br>
+            </div>
+          </div>
         </div>
       </div>
     </div>
