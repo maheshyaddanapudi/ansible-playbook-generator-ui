@@ -757,7 +757,19 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       let hosts_as_list: string[] = a_play.hosts.split(',');
       console.log(hosts_as_list)
       await hosts_as_list.forEach(async (a_host: string)=> {
-        await this.inventory_hosts_list.push(a_host)
+
+        let duplicate: boolean = false
+
+        await this.inventory_hosts_list.forEach((an_added_host: string) => {
+            if(!duplicate && a_host == an_added_host)
+            {
+              duplicate = true
+            }
+        })
+        if(!duplicate)
+        {
+          await this.inventory_hosts_list.push(a_host)
+        }
       })
     })
 

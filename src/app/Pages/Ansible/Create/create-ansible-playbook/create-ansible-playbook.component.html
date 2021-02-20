@@ -231,32 +231,34 @@
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div> 
-                        <div class="card-body bg-light">
-                          <table class="table table-dark">
-                            <thead class="thead">
-                              <th class="text-center">#</th>
-                              <th class="text-center">Field Name</th>
-                              <th class="text-center">Description</th>
-                              <th class="text-center">Type</th>
-                              <th class="text-center">Default</th>
-                              <th class="text-center">Choices</th>
-                              <th class="text-center">Value</th>
-                            </thead>
-                            <tbody class="tbody">
-                              <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
-                                <td class="text-center">{{input_field_counter+1}}</td>
-                                <td class="text-center">{{input_field.fieldName}}</td>
-                                <td class="text-muted">{{input_field.fieldDescription}}</td>
-                                <td class="text-center">{{input_field.fieldType}}</td>
-                                <td class="text-center">{{input_field.defaultValue}}</td>
-                                <td class="text-center">{{input_field.choices}}</td>
-                                <td class="text-center">
-                                  <input type="text" [(ngModel)]="input_field.value">
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <perfect-scrollbar style="height: 600px">
+                          <div class="card-body bg-light">
+                            <table class="table table-dark">
+                              <thead class="thead">
+                                <th class="text-center">#</th>
+                                <th class="text-center">Field Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Default</th>
+                                <th class="text-center">Choices</th>
+                                <th class="text-center">Value</th>
+                              </thead>
+                              <tbody class="tbody">
+                                <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
+                                  <td class="text-center">{{input_field_counter+1}}</td>
+                                  <td class="text-center">{{input_field.fieldName}}</td>
+                                  <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                  <td class="text-center">{{input_field.fieldType}}</td>
+                                  <td class="text-center">{{input_field.defaultValue}}</td>
+                                  <td class="text-center">{{input_field.choices}}</td>
+                                  <td class="text-center">
+                                    <input type="text" [(ngModel)]="input_field.value">
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                      </perfect-scrollbar>
                       </div>
                     </ng-template>
                     <button *ngIf="a_selected_command && a_selected_command.inputFields ; else no_input_selected_tasks_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_selected_tasks_composition_template)">Input</button>
@@ -271,24 +273,26 @@
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div> 
-                        <div class="card-body bg-light">
-                          <table class="table table-dark">
-                            <thead class="thead">
-                              <th class="text-center">#</th>
-                              <th class="text-center">Field Name</th>
-                              <th class="text-center">Description</th>
-                              <th class="text-center">Returned Always?</th>
-                            </thead>
-                            <tbody class="tbody">
-                              <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
-                                <td class="text-center">{{output_field_counter+1}}</td>
-                                <td class="text-center">{{output_field.fieldName}}</td>
-                                <td class="text-muted">{{output_field.fieldDescription}}</td>
-                                <td class="text-center">{{output_field.returnedAlways}}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <perfect-scrollbar style="height: 600px">
+                          <div class="card-body bg-light">
+                            <table class="table table-dark">
+                              <thead class="thead">
+                                <th class="text-center">#</th>
+                                <th class="text-center">Field Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Returned Always?</th>
+                              </thead>
+                              <tbody class="tbody">
+                                <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
+                                  <td class="text-center">{{output_field_counter+1}}</td>
+                                  <td class="text-center">{{output_field.fieldName}}</td>
+                                  <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                  <td class="text-center">{{output_field.returnedAlways}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </perfect-scrollbar>
                       </div>
                     </ng-template>
                     <button type="button" *ngIf="a_selected_command && a_selected_command.outputFields ; else no_output_selected_tasks_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_selected_tasks_composition_template)">Output</button>
@@ -431,32 +435,34 @@
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div> 
-                        <div class="card-body bg-light">
-                          <table class="table table-dark">
-                            <thead class="thead">
-                              <th class="text-center">#</th>
-                              <th class="text-center">Field Name</th>
-                              <th class="text-center">Description</th>
-                              <th class="text-center">Type</th>
-                              <th class="text-center">Default</th>
-                              <th class="text-center">Choices</th>
-                              <th class="text-center">Value</th>
-                            </thead>
-                            <tbody class="tbody">
-                              <tr *ngFor="let input_field of current_command_details_selected.inputFields ; index as input_field_counter">
-                                <td class="text-center">{{input_field_counter+1}}</td>
-                                <td class="text-center">{{input_field.fieldName}}</td>
-                                <td class="text-muted">{{input_field.fieldDescription}}</td>
-                                <td class="text-center">{{input_field.fieldType}}</td>
-                                <td class="text-center">{{input_field.defaultValue}}</td>
-                                <td class="text-center">{{input_field.choices}}</td>
-                                <td class="text-center">
-                                  <input type="text" [(ngModel)]="input_field.value" placeholder="{{input_field.defaultValue}}">
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <perfect-scrollbar style="height: 600px">
+                          <div class="card-body bg-light">
+                            <table class="table table-dark">
+                              <thead class="thead">
+                                <th class="text-center">#</th>
+                                <th class="text-center">Field Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Default</th>
+                                <th class="text-center">Choices</th>
+                                <th class="text-center">Value</th>
+                              </thead>
+                              <tbody class="tbody">
+                                <tr *ngFor="let input_field of current_command_details_selected.inputFields ; index as input_field_counter">
+                                  <td class="text-center">{{input_field_counter+1}}</td>
+                                  <td class="text-center">{{input_field.fieldName}}</td>
+                                  <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                  <td class="text-center">{{input_field.fieldType}}</td>
+                                  <td class="text-center">{{input_field.defaultValue}}</td>
+                                  <td class="text-center">{{input_field.choices}}</td>
+                                  <td class="text-center">
+                                    <input type="text" [(ngModel)]="input_field.value" placeholder="{{input_field.defaultValue}}">
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </perfect-scrollbar>
                       </div>
                     </ng-template>
                     <button *ngIf="current_command_details_selected && current_command_details_selected.inputFields ; else no_input_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_composition_template)">Input</button>
@@ -471,26 +477,28 @@
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div> 
-                        <div class="card-body bg-light">
-                          <table class="table table-dark">
-                            <thead class="thead">
-                              <th class="text-center">#</th>
-                              <th class="text-center">Field Name</th>
-                              <th class="text-center">Description</th>
-                              <th class="text-center">Type</th>
-                              <th class="text-center">Returned Always?</th>
-                            </thead>
-                            <tbody class="tbody">
-                              <tr *ngFor="let output_field of current_command_details_selected.outputFields ; index as output_field_counter">
-                                <td class="text-center">{{output_field_counter+1}}</td>
-                                <td class="text-center">{{output_field.fieldName}}</td>
-                                <td class="text-muted">{{output_field.fieldDescription}}</td>
-                                <td class="text-center">{{output_field.fieldType}}</td>
-                                <td class="text-center">{{output_field.returnedAlways}}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <perfect-scrollbar style="height: 600px">
+                          <div class="card-body bg-light">
+                            <table class="table table-dark">
+                              <thead class="thead">
+                                <th class="text-center">#</th>
+                                <th class="text-center">Field Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Returned Always?</th>
+                              </thead>
+                              <tbody class="tbody">
+                                <tr *ngFor="let output_field of current_command_details_selected.outputFields ; index as output_field_counter">
+                                  <td class="text-center">{{output_field_counter+1}}</td>
+                                  <td class="text-center">{{output_field.fieldName}}</td>
+                                  <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                  <td class="text-center">{{output_field.fieldType}}</td>
+                                  <td class="text-center">{{output_field.returnedAlways}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </perfect-scrollbar>
                       </div>
                     </ng-template>
                     <button type="button" *ngIf="current_command_details_selected && current_command_details_selected.outputFields ; else no_output_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_composition_template)">Output</button>
@@ -726,32 +734,34 @@
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div> 
-                              <div class="card-body bg-light">
-                                <table class="table table-dark">
-                                  <thead class="thead">
-                                    <th class="text-center">#</th>
-                                    <th class="text-center">Field Name</th>
-                                    <th class="text-center">Description</th>
-                                    <th class="text-center">Type</th>
-                                    <th class="text-center">Default</th>
-                                    <th class="text-center">Choices</th>
-                                    <th class="text-center">Value</th>
-                                  </thead>
-                                  <tbody class="tbody">
-                                    <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
-                                      <td class="text-center">{{input_field_counter+1}}</td>
-                                      <td class="text-center">{{input_field.fieldName}}</td>
-                                      <td class="text-muted">{{input_field.fieldDescription}}</td>
-                                      <td class="text-center">{{input_field.fieldType}}</td>
-                                      <td class="text-center">{{input_field.defaultValue}}</td>
-                                      <td class="text-center">{{input_field.choices}}</td>
-                                      <td class="text-center">
-                                        <input type="text" [(ngModel)]="input_field.value">
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
+                              <perfect-scrollbar style="height: 600px">
+                                <div class="card-body bg-light">
+                                  <table class="table table-dark">
+                                    <thead class="thead">
+                                      <th class="text-center">#</th>
+                                      <th class="text-center">Field Name</th>
+                                      <th class="text-center">Description</th>
+                                      <th class="text-center">Type</th>
+                                      <th class="text-center">Default</th>
+                                      <th class="text-center">Choices</th>
+                                      <th class="text-center">Value</th>
+                                    </thead>
+                                    <tbody class="tbody">
+                                      <tr *ngFor="let input_field of a_selected_command.inputFields ; index as input_field_counter">
+                                        <td class="text-center">{{input_field_counter+1}}</td>
+                                        <td class="text-center">{{input_field.fieldName}}</td>
+                                        <td class="text-muted">{{input_field.fieldDescription}}</td>
+                                        <td class="text-center">{{input_field.fieldType}}</td>
+                                        <td class="text-center">{{input_field.defaultValue}}</td>
+                                        <td class="text-center">{{input_field.choices}}</td>
+                                        <td class="text-center">
+                                          <input type="text" [(ngModel)]="input_field.value">
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </perfect-scrollbar>
                             </div>
                           </ng-template>
                           <button *ngIf="a_selected_command && a_selected_command.inputFields ; else no_input_selected_tasks_available_template" type="button" class="btn btn-primary btn-sm" (click)="openLarge(input_selected_tasks_composition_template)">Input</button>
@@ -766,24 +776,26 @@
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div> 
-                              <div class="card-body bg-light">
-                                <table class="table table-dark">
-                                  <thead class="thead">
-                                    <th class="text-center">#</th>
-                                    <th class="text-center">Field Name</th>
-                                    <th class="text-center">Description</th>
-                                    <th class="text-center">Returned Always?</th>
-                                  </thead>
-                                  <tbody class="tbody">
-                                    <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
-                                      <td class="text-center">{{output_field_counter+1}}</td>
-                                      <td class="text-center">{{output_field.fieldName}}</td>
-                                      <td class="text-muted">{{output_field.fieldDescription}}</td>
-                                      <td class="text-center">{{output_field.returnedAlways}}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
+                              <perfect-scrollbar style="height: 600px">
+                                <div class="card-body bg-light">
+                                  <table class="table table-dark">
+                                    <thead class="thead">
+                                      <th class="text-center">#</th>
+                                      <th class="text-center">Field Name</th>
+                                      <th class="text-center">Description</th>
+                                      <th class="text-center">Returned Always?</th>
+                                    </thead>
+                                    <tbody class="tbody">
+                                      <tr *ngFor="let output_field of a_selected_command.outputFields ; index as output_field_counter">
+                                        <td class="text-center">{{output_field_counter+1}}</td>
+                                        <td class="text-center">{{output_field.fieldName}}</td>
+                                        <td class="text-muted">{{output_field.fieldDescription}}</td>
+                                        <td class="text-center">{{output_field.returnedAlways}}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </perfect-scrollbar>
                             </div>
                           </ng-template>
                           <button type="button" *ngIf="a_selected_command && a_selected_command.outputFields ; else no_output_selected_tasks_available_template" class="btn btn-success btn-sm" (click)="openLarge(output_selected_tasks_composition_template)">Output</button>
