@@ -602,12 +602,20 @@
         <h4 class="text-white">Plays Detailed View</h4>
       </div>
       <div class="card-body bg-light">
-        <div id="accordion" class="my-2">
-          <div *ngFor="let play of intermediate_plays_list ; index as play_counter" class="card mb-2">
-            <div class="card-header bg-info" [id]="'heading'+play.id" data-toggle="collapse" data-parent="#accordion" [attr.data-target]="'#collapse'+play.id" aria-expanded="true" [attr.aria-controls]="'collapse'+play.id">
-              <h6 class="mb-0 text-white">
-                <b>{{play_counter+1}}. {{play.name}} (Click to toggle)</b>
-              </h6>
+        <div id="accordion" class="my-2" cdkDropList (cdkDropListDropped)="onDropPlay($event)">
+          <div *ngFor="let play of intermediate_plays_list ; index as play_counter" class="card mb-2"  cdkDrag cdkDragLockAxis="y">
+            <div class="card-header bg-info drag-handle" [id]="'heading'+play.id" data-toggle="collapse" data-parent="#accordion" [attr.data-target]="'#collapse'+play.id" aria-expanded="true" [attr.aria-controls]="'collapse'+play.id">
+              <ng-container [ngTemplateOutlet]="dragHandleTmpl">
+                </ng-container>
+                <ng-template #dragHandleTmpl>
+                    <svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </ng-template>
+                <strong class="text-white">{{play_counter+1}}.{{play.name}} (Click to toggle)</strong>
             </div>
             <div [id]="'collapse'+play.id" class="collapse" [attr.aria-labelledby]="'heading'+play.id" data-parent="#accordion">
               <div class="card-body">
@@ -852,13 +860,16 @@
                         <input type="text" [(ngModel)]="a_selected_command.register" (focusout)="validate_register_output_variable_name(play_counter, selected_commands_counter, $event.target.value)">
                       </td>
                       <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-danger" (click)="delete_task(play_counter, selected_commands_counter)">Delete</button>
+                        <button *ngIf="selected_commands_counter > 0 ; else na_delete_button_template" type="button" class="btn btn-sm btn-danger" (click)="delete_task(play_counter, selected_commands_counter)">Delete</button>
+                        <ng-template #na_delete_button_template>
+                          <button type="button" class="btn btn-sm btn-danger disabled" disabled>Delete</button>
+                        </ng-template>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <button type="button" class="btn btn-block btn-danger">Delete Play</button>
+              <button type="button" class="btn btn-block btn-danger" (click)="delete_play(play_counter)">Delete Play</button>
             </div>
           </div>
         </div>
@@ -874,11 +885,36 @@
 </div>
 <div *ngIf="response_yaml" class="container-fluid">
   <div class="card">
-    <div class="card-header text-center">
-      <h5>Playbook YAML</h5>
+    <div class="card-header bg-dark text-white text-center">
+      <h5>Playbook Execution Command</h5>
     </div>
-    <div class="card-body">
-      <pre>{{response_yaml}}</pre>
+    <div class="card-body bg-secondary text-white text-center">
+      <strong>ansible-playbook -i inventory.ini generated_playbook.yml</strong>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header bg-dark text-white text-center">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Playbook YAML (generated_playbook.yml)</h5>
+        </div>
+        <div class="col-md-6">
+          <h5>Inventory (inventory.ini)</h5>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-secondary text-white">
+      <div class="row">
+        <div class="col-md-6">
+          <pre class="text-white">{{response_yaml}}</pre>
+        </div>
+        <div class="col-md-6">
+          <div>[all_play_hosts]</div>
+          <div *ngFor="let a_host of inventory_hosts_list">
+            {{a_host}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
