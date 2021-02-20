@@ -14,7 +14,9 @@ The idea is to build a single production grade Angular UI with the following
 
       • Ability to generate Ansible Playbook instead of coding the YAML
 
-## Web App [Deployed Here](http://www.ansiplaygen.xyz/)
+## Web App 
+	
+[Deployed Here](http://www.ansiplaygen.xyz/) on Google Cloud Platform - Kubernetes Cluster
 
 ### Video Sample
 
