@@ -106,7 +106,7 @@
           <table class="table table-bordered table-striped">
             <thead class="thead table-primary">
               <th class=text-center>Gather Facts</th>
-              <th class=text-center>Hosts Count</th>
+              <th class=text-center>Play Hosts</th>
             </thead>
             <tbody class="tbody">
               <td class="text-center">
@@ -643,19 +643,19 @@
                 <table class="table table-bordered table-striped">
                   <thead class="thead table-primary">
                     <th class=text-center>Gather Facts</th>
-                    <th class=text-center>Hosts Count</th>
+                    <th class=text-center>Play Hosts</th>
                     <th class=text-center>Vars Count</th>
                     <th class=text-center>Tasks Count</th>
                   </thead>
                   <tbody class="tbody">
                     <td class="text-center">{{play.gather_facts}}</td>
-                    <td class="text-center">{{get_comma_delimited_length(play.hosts)}}</td>
+                    <td class="text-center">{{play.hosts}}</td>
                     <td class="text-center">{{get_object_keys_count(play.vars)}}</td>
                     <td class="text-center">{{play.commands_list.length}}</td>
                   </tbody>
                 </table>
-                <table class="table table-warning table-bordered table-striped table-hover">
-                  <thead class="thead">
+                <table class="table table-bordered table-striped table-hover">
+                  <thead class="thead table-warning">
                     <th class="text-center">#</th>
                     <th class="text-center">Variable Name</th>
                     <th class="text-center">Variable Value</th>
