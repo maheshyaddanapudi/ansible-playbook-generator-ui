@@ -1,6 +1,9 @@
 <div class="container-fluid text-center">
     <div class="card-header">
       <h1><u><b><i>Compose New Ansible Playbook !!!</i></b></u></h1>
+      <div class="mr-0">
+        <input type="checkbox" [checked]="helper" (click)="toggle_helper()"> Helper
+      </div>
     </div>
 
     <div *ngIf="show_loading" class="loading-custom">Loading...</div>

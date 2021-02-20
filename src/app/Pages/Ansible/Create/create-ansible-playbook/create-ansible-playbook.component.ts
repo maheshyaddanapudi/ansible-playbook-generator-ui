@@ -8,6 +8,7 @@ import { IntermediatePlay } from 'src/app/Modals/Display/IntermediatePlay';
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 import { IntermediateVar } from 'src/app/Modals/Display/IntermediateVar';
 import { PlaybookRequestService } from 'src/app/Services/Rest/ansible-playbook-json2yaml';
+import { ToastrService } from 'src/app/Services/LibraryOverrides/toastr.service';
 
 @Component({
   selector: 'app-create-ansible-playbook',
@@ -17,6 +18,7 @@ import { PlaybookRequestService } from 'src/app/Services/Rest/ansible-playbook-j
 export class CreateAnsiblePlaybookComponent implements OnInit {
 
   public show_loading: boolean
+  public helper: boolean = true
 
   public plays: Play[] = []
   public inventory_hosts_list: string[] = []
@@ -66,7 +68,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   public response_yaml: any
 
 
-  constructor(private playbookRequestService: PlaybookRequestService, private ansibleCommandDetailerControllerService: AnsibleCommandDetailerControllerService, private modalService: NgbModal) {
+  constructor(private toastrService: ToastrService, private playbookRequestService: PlaybookRequestService, private ansibleCommandDetailerControllerService: AnsibleCommandDetailerControllerService, private modalService: NgbModal) {
     
    }
 
@@ -85,6 +87,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   })
   
     this.show_loading = false
+    this.start_helper_services()
     //this.set_master_commands_list()
   }
 
@@ -781,5 +784,60 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     non_standard_name = non_standard_name.split(' ').join('_')
 
     return non_standard_name;
+  }
+
+  toggle_helper(){
+    this.helper = !this.helper
+
+    if(this.helper){
+      this.start_helper_services()
+    }
+  }
+
+  start_helper_services(){
+    let helper_services_interval = setInterval(()=>{
+      if(this.helper){
+        if(this.intermediate_plays_list.length < 1 && !this.show_add_play_form){
+          this.toastrService.info("Please click on Add New Play to begin !!!", 'Add New Play')
+        }
+        else if(this.show_add_play_form)
+        {
+          if(!this.current_play_hosts){
+            this.toastrService.info("Please add some hosts for playbook execution !!!", 'Add Hosts to New Play')
+          }
+          else if(!this.current_module_selected && (!this.selected_commands_list || this.selected_commands_list.length < 1))
+          {
+            this.toastrService.info("Please add a new task by selecting module, sub-module & command !!!", 'Add Task to New Play')
+          }
+          else if(!this.current_module_selected && !this.current_command_selected && (this.selected_commands_list && this.selected_commands_list.length > 0)){
+            this.toastrService.error("Please save your play by clicking Save !!!", 'Confirm Play')
+          }
+          else if(!this.current_module_selected){
+            this.toastrService.success("Please select a module from the drop down !!!", 'Select Module')
+          }
+          else if(!this.current_sub_module_selected && this.sub_modules_list && this.sub_modules_list.length > 0){
+            this.toastrService.success("Please select a sub-module from the drop down !!!", 'Select Sub-Module')
+          }
+          else if(!this.current_command_selected){
+            this.toastrService.success("Please select a command from the drop down !!!", 'Select Command')
+          }
+          else 
+          {
+            this.toastrService.error("Please define Inputs & Metadata by clicking the button & confirm task selection !!!", 'Define & Confirm Task')
+          }
+        }
+        else if((this.intermediate_plays_list || this.intermediate_plays_list.length > 1) && !this.response_yaml)
+        {
+          this.toastrService.error("Please Generate Playbook by clicking Generate Playbook !!!", 'Generate Playbook')
+        }
+        else if(this.response_yaml){
+          clearInterval(helper_services_interval)
+        }
+      }
+      else
+      {
+        clearInterval(helper_services_interval)
+      }
+    }, 15000)
   }
 }
