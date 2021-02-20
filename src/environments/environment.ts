@@ -3,8 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  ANSIBLE_DOCS_BOOT_BASE_URL: 'http://34.123.80.3:8080',
-  ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL: 'http://34.123.80.3:5000',
+  ANSIBLE_DOCS_BOOT_BASE_URL: 'http://104.154.146.220:8080',
+  ANSIBLE_PLAYBOOK_JSON2YAML_BASE_URL: 'http://104.154.146.220:5000',
   production: false
 };
 

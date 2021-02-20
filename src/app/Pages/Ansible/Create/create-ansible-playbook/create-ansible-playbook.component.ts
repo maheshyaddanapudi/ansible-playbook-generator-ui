@@ -19,6 +19,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   public show_loading: boolean
 
   public plays: Play[] = []
+  public inventory_hosts_list: string[] = []
   public intermediate_plays_list: IntermediatePlay[] = []
 
   public show_add_play_form: boolean
@@ -133,6 +134,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     this.register_output_variable_name_validation_error = undefined
     this.reset_all_selections()
     this.selected_commands_list = []
+    this.inventory_hosts_list = []
   }
 
   async select_module(selected_module: ModuleRef){
@@ -534,6 +536,10 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     moveItemInArray(this.intermediate_plays_list[play_index].commands_list, event.previousIndex, event.currentIndex);
   }
 
+  onDropPlay(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.intermediate_plays_list, event.previousIndex, event.currentIndex);
+  }
+
   reset_current_play_composition(avoid_vars_reset?: boolean){
     this.reset_all_selections(avoid_vars_reset)
     this.current_play_hosts = undefined
@@ -733,10 +739,28 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       }
     })
 
+    await this.compose_inventory_details();
+
     this.show_loading = false;
   }
 
   get_comma_delimited_length(object: string): number{
     return object.split(',').length
+  }
+
+  delete_play(play_index: number){
+    this.intermediate_plays_list.splice(play_index, 1)
+  }
+
+  async compose_inventory_details(){
+    await this.intermediate_plays_list.forEach(async (a_play: IntermediatePlay) => {
+      let hosts_as_list: string[] = a_play.hosts.split(',');
+      console.log(hosts_as_list)
+      await hosts_as_list.forEach(async (a_host: string)=> {
+        await this.inventory_hosts_list.push(a_host)
+      })
+    })
+
+    console.log(this.inventory_hosts_list)
   }
 }
