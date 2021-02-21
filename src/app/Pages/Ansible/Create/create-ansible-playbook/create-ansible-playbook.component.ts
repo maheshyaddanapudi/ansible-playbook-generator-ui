@@ -859,17 +859,21 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       inventory_ini = inventory_ini + "\n" + a_host
     })
 
-    this.intermediate_plays_list.forEach((a_play: IntermediatePlay) => {
-      let a_play_hosts_list: string[] = a_play.hosts.split(',')
-      if(a_play_hosts_list.length > 0)
-      {
-        inventory_ini = inventory_ini + "\n\n" + "[" + a_play.name.split(' ').join('_') + '_hosts]'
 
-        a_play_hosts_list.forEach((a_host: string)=> {
-          inventory_ini = inventory_ini + "\n" + a_host
-        })
-      }
-    })
+    if(this.intermediate_plays_list.length > 1)
+    {
+      this.intermediate_plays_list.forEach((a_play: IntermediatePlay) => {
+        let a_play_hosts_list: string[] = a_play.hosts.split(',')
+        if(a_play_hosts_list.length > 0)
+        {
+          inventory_ini = inventory_ini + "\n\n" + "[" + a_play.name.split(' ').join('_') + '_hosts]'
+  
+          a_play_hosts_list.forEach((a_host: string)=> {
+            inventory_ini = inventory_ini + "\n" + a_host
+          })
+        }
+      })
+    }
 
     this.dyanmicDownloadByHtmlTag({
       fileName: 'inventory.ini',
