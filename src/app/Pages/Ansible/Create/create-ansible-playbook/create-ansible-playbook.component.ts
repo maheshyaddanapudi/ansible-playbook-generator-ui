@@ -489,16 +489,16 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
 
   validate_register_output_variable_name(play_index: number, task_index: number, register_output_var_name: string){
 
-    console.log('Validation request recieved', register_output_var_name)
+    //console.log('Validation request recieved', register_output_var_name)
 
     this.register_output_variable_name_validation_error = undefined
 
     if(this.should_validate_register_output_variable_name)
     {
-      console.log('Validatiing', register_output_var_name)
+      //console.log('Validatiing', register_output_var_name)
       if(play_index > -1){
 
-        console.log('Validating in Selected Plays', register_output_var_name)
+        //console.log('Validating in Selected Plays', register_output_var_name)
         let task_counter = 0;
         this.intermediate_plays_list[play_index].commands_list.forEach((selected_command: CommandDetailsDTO) =>{
           if(selected_command.register && selected_command.register == register_output_var_name && task_counter != task_index)
@@ -509,7 +509,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
         })
       }
       else{
-        console.log('Validating in Current Play', register_output_var_name)
+        //console.log('Validating in Current Play', register_output_var_name)
         let task_counter = 0;
         this.selected_commands_list.forEach((selected_command: CommandDetailsDTO) =>{
           if(selected_command.register && selected_command.register == register_output_var_name && task_counter != task_index)
@@ -683,9 +683,9 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
         }
 
         await command_details.inputFields.forEach((an_input_field: InputFieldRef) => {
-          console.log('Iterating Input Field', an_input_field.fieldName)
+          //console.log('Iterating Input Field', an_input_field.fieldName)
           if(an_input_field.value){
-            console.log('Adding Input Field Value', an_input_field.value)
+            //console.log('Adding Input Field Value', an_input_field.value)
             input_fields[an_input_field.fieldName] = an_input_field.value
           }
         })
@@ -719,13 +719,13 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
         modules: tasks
       }
 
-      console.log('Created Play Object ...', JSON.stringify(play))
+      //console.log('Created Play Object ...', JSON.stringify(play))
 
       plays.push(play)
 
     })
 
-    console.log(JSON.stringify(plays))
+    //console.log(JSON.stringify(plays))
 
     await this.playbookRequestService.generateYamlPost(plays).toPromise().then((response: any) => {
       console.log('response', response)
@@ -735,7 +735,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       {
         this.response_yaml = err_response.error.text
 
-        console.log(this.response_yaml)
+        //console.log(this.response_yaml)
       }
       else{
         this.error_message = err_response.message
@@ -761,7 +761,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
   async compose_inventory_details(){
     await this.intermediate_plays_list.forEach(async (a_play: IntermediatePlay) => {
       let hosts_as_list: string[] = a_play.hosts.split(',');
-      console.log(hosts_as_list)
+      //console.log(hosts_as_list)
       await hosts_as_list.forEach((a_host: string)=> {
 
         let duplicate: boolean = false
@@ -779,7 +779,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       })
     })
 
-    console.log(this.inventory_hosts_list)
+    //console.log(this.inventory_hosts_list)
   }
 
   get_coding_standard_converted_name(non_standard_name: string): string{

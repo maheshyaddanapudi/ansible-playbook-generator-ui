@@ -1,9 +1,13 @@
+<div *ngIf="show_loading" class="loading-custom">Loading...</div>
 <div class="container-fluid text-center my-2 vertical-center">
     <div class="jumbotron" style="background-color: #fff; height: calc(45vh)">
         <h1>Ansible Playbook Generator</h1>
         <p class="lead">
           A pick and choose UI to generate Ansible Playbook YAMLs
         </p>
-        <a class="btn btn-lg btn-warning" [routerLink]="['create-ansible-playbook']" skipLocationChange role="button"><u><b>Let's get started !!!</b></u></a>
+        <div *ngIf="error_message" class="alert alert-danger mt-2 text-center text-strong" role="alert">
+          <strong>{{error_message}}</strong>
+        </div>
+        <a *ngIf="!error_message" class="btn btn-lg btn-warning" [routerLink]="['create-ansible-playbook']" skipLocationChange role="button"><u><b>Let's get started !!!</b></u></a>
       </div>
 </div>
