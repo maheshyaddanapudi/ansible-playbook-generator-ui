@@ -904,7 +904,7 @@
 <div *ngIf="response_yaml" class="container-fluid">
   <div class="card">
     <div class="card-header bg-dark text-white text-center">
-      <h5>Playbook YAML (generated_playbook.yml)</h5>
+      <h5>Playbook YAML (ansible_playbook.yml)</h5>
     </div>
     <div class="card-body bg-secondary">
       <pre class="text-white">{{response_yaml}}</pre>
@@ -925,7 +925,7 @@
     <div class="card-body bg-secondary text-white">
       <div class="row">
         <div class="col-md-6 text-center">
-          <strong>ansible-playbook -i inventory.ini generated_playbook.yml</strong>
+          <strong>ansible-playbook -i inventory.ini ansible_playbook.yml</strong>
         </div>
         <div class="col-md-6">
           <div>[all_play_hosts]</div>
