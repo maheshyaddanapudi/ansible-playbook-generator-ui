@@ -343,19 +343,19 @@
                                 <input type="checkbox" [checked]="a_selected_command.no_log" (click)="toggle_selected_command_no_log(-1, selected_commands_counter)">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="a_selected_command.delegate_to">
+                                <input type="text" [(ngModel)]="a_selected_command.delegate_to" placeholder="example - 'localhost'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="a_selected_command.become">
+                                <input type="text" [(ngModel)]="a_selected_command.become" placeholder="example - 'root'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="a_selected_command.become_method">
+                                <input type="text" [(ngModel)]="a_selected_command.become_method" placeholder="example - 'su'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="a_selected_command.with_items">
+                                <input type="text" [(ngModel)]="a_selected_command.with_items" placeholder="example - 'var_list_items'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="a_selected_command.when">
+                                <input type="text" [(ngModel)]="a_selected_command.when" placeholder="example - '( var_flag == true )'">
                               </td>
                             </tr>
                           </tbody>
@@ -558,10 +558,10 @@
                                 <input type="text" [(ngModel)]="current_command_selected_become_method" placeholder="example - 'su'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="current_command_selected_with_items">
+                                <input type="text" [(ngModel)]="current_command_selected_with_items" placeholder="example - 'var_list_items'">
                               </td>
                               <td class="text-center">
-                                <input type="text" [(ngModel)]="current_command_selected_when">
+                                <input type="text" [(ngModel)]="current_command_selected_when" placeholder="example - '( var_flag == true )'">
                               </td>
                             </tr>
                           </tbody>
@@ -846,19 +846,19 @@
                                       <input type="checkbox" [checked]="a_selected_command.no_log" (click)="toggle_selected_command_no_log(play_counter, selected_commands_counter)">
                                     </td>
                                     <td class="text-center">
-                                      <input type="text" [(ngModel)]="a_selected_command.delegate_to">
+                                      <input type="text" [(ngModel)]="a_selected_command.delegate_to" placeholder="example - 'localhost'">
                                     </td>
                                     <td class="text-center">
-                                      <input type="text" [(ngModel)]="a_selected_command.become">
+                                      <input type="text" [(ngModel)]="a_selected_command.become" placeholder="example - 'root'">
                                     </td>
                                     <td class="text-center">
-                                      <input type="text" [(ngModel)]="a_selected_command.become_method">
+                                      <input type="text" [(ngModel)]="a_selected_command.become_method" placeholder="example - 'su'">
                                     </td>
                                     <td class="text-center">
-                                      <input type="text" [(ngModel)]="a_selected_command.with_items">
+                                      <input type="text" [(ngModel)]="a_selected_command.with_items" placeholder="example - 'var_list_items'">
                                     </td>
                                     <td class="text-center">
-                                      <input type="text" [(ngModel)]="a_selected_command.when">
+                                      <input type="text" [(ngModel)]="a_selected_command.when" placeholder="example - '( var_flag == true )'">
                                     </td>
                                   </tr>
                                 </tbody>
