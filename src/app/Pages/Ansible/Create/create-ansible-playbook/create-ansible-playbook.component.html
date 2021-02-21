@@ -884,7 +884,10 @@
                   </tbody>
                 </table>
               </div>
-              <button type="button" class="btn btn-block btn-danger" (click)="delete_play(play_counter)">Delete Play</button>
+              <button *ngIf="!response_yaml && intermediate_plays_list.length > 1 ; else na_delete_playbook_button_template" type="button" class="btn btn-block btn-danger" (click)="delete_play(play_counter)">Delete Play</button>
+              <ng-template #na_delete_playbook_button_template>
+                <button type="button" class="btn btn-block btn-danger disabled" disabled>Delete Play</button>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -893,7 +896,7 @@
         <strong>Add some new plays to see details !!!</strong>
       </div>
     </div>
-    <button *ngIf="!show_add_play_form && intermediate_plays_list.length > 0 ; else disable_generate_playbook_button_template" class="btn btn-primary btn-block my-2" (click)="create_plays_request()"><b>Generate Playbook</b></button>
+    <button *ngIf="!show_add_play_form && intermediate_plays_list.length > 0 && !response_yaml ; else disable_generate_playbook_button_template" class="btn btn-primary btn-block my-2" (click)="create_plays_request()"><b>Generate Playbook</b></button>
     <ng-template #disable_generate_playbook_button_template>
       <button class="btn btn-primary btn-block my-2 disabled" disabled><b>Generate Playbook</b></button>
     </ng-template>
@@ -906,6 +909,7 @@
     <div class="card-body bg-secondary">
       <pre class="text-white">{{response_yaml}}</pre>
     </div>
+    <button type="button" class="btn btn-lg btn-block btn-success my-1" (click)="dynamicDownloadPlaybook()">Download Playbook</button>
   </div>
   <div class="card">
     <div class="card-header bg-dark text-white text-center">
@@ -941,5 +945,6 @@
         </div>
       </div>
     </div>
+    <button type="button" class="btn btn-lg btn-block btn-info my-1" (click)="dynamicDownloadInventory()">Download Inventory</button>
   </div>
 </div>

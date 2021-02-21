@@ -126,6 +126,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
 
   reset_composition(){
     this.response_yaml = undefined
+    this.inventory_hosts_list = []
     this.plays = []
     this.intermediate_plays_list = []
     this.show_add_play_form = false
@@ -841,5 +842,60 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
         clearInterval(helper_services_interval)
       }
     }, 15000)
+  }
+
+  dynamicDownloadPlaybook() {
+    this.dyanmicDownloadByHtmlTag({
+      fileName: 'ansible_playbook.yml',
+      text: this.response_yaml
+    });
+  }
+
+  dynamicDownloadInventory() {
+
+    let inventory_ini: string = "[all_play_hosts]"
+
+    this.inventory_hosts_list.forEach((a_host: string) => {
+      inventory_ini = inventory_ini + "\n" + a_host
+    })
+
+    this.intermediate_plays_list.forEach((a_play: IntermediatePlay) => {
+      let a_play_hosts_list: string[] = a_play.hosts.split(',')
+      if(a_play_hosts_list.length > 0)
+      {
+        inventory_ini = inventory_ini + "\n\n" + "[" + a_play.name.split(' ').join('_') + '_hosts]'
+
+        a_play_hosts_list.forEach((a_host: string)=> {
+          inventory_ini = inventory_ini + "\n" + a_host
+        })
+      }
+    })
+
+    this.dyanmicDownloadByHtmlTag({
+      fileName: 'inventory.ini',
+      text: inventory_ini
+    });
+  }
+
+  private setting = {
+    element: {
+      dynamicDownload: null as HTMLElement
+    }
+  }
+
+  private dyanmicDownloadByHtmlTag(arg: {
+    fileName: string,
+    text: string
+  }) {
+    if (!this.setting.element.dynamicDownload) {
+      this.setting.element.dynamicDownload = document.createElement('a');
+    }
+    const element = this.setting.element.dynamicDownload;
+    const fileType = arg.fileName.indexOf('.yml') > -1 ? 'text/yaml' : 'text/plain';
+    element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(arg.text)}`);
+    element.setAttribute('download', arg.fileName);
+
+    var event = new MouseEvent("click");
+    element.dispatchEvent(event);
   }
 }
