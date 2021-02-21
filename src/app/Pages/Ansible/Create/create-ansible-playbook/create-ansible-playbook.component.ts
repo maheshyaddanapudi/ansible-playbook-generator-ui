@@ -856,7 +856,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
     let inventory_ini: string = "[all_play_hosts]"
 
     this.inventory_hosts_list.forEach((a_host: string) => {
-      inventory_ini = inventory_ini + "\n" + a_host
+      inventory_ini = inventory_ini + "\n" + a_host.trim()
     })
 
 
@@ -869,7 +869,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
           inventory_ini = inventory_ini + "\n\n" + "[" + a_play.name.split(' ').join('_') + '_hosts]'
   
           a_play_hosts_list.forEach((a_host: string)=> {
-            inventory_ini = inventory_ini + "\n" + a_host
+            inventory_ini = inventory_ini + "\n" + a_host.trim()
           })
         }
       })
@@ -895,7 +895,7 @@ export class CreateAnsiblePlaybookComponent implements OnInit {
       this.setting.element.dynamicDownload = document.createElement('a');
     }
     const element = this.setting.element.dynamicDownload;
-    const fileType = arg.fileName.indexOf('.yml') > -1 ? 'text/yaml' : 'text/plain';
+    const fileType = (arg.fileName.indexOf('.yml') > -1 || arg.fileName.indexOf('.yaml') > -1) ? 'text/yaml' : 'text/plain';
     element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(arg.text)}`);
     element.setAttribute('download', arg.fileName);
 
